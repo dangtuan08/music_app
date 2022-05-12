@@ -153,7 +153,7 @@ const app = {
         this.defineProperties()
         // Lắng nghe các sự kiện dom event
         this.handleEvents()
-//sửa
+        //sửa linh tinh
         // Tải thông tin bài hát đầu tiên khi chạy ứng dụng
         this.loadCurrentSong()
         //render danh sách các bài nhạc vào playlist
