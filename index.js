@@ -108,6 +108,7 @@ const app = {
         const _this = this;
         const cdWidth = cd.offsetWidth
 
+<<<<<<< HEAD
         // Xử lý animation cho cdThumb
         const animateThumb = cdThumb.animate({ transform: 'rotate(0deg)', transform: 'rotate(360deg)' }, {
             duration: 8000,
@@ -115,6 +116,31 @@ const app = {
         })
         animateThumb.pause()
 
+=======
+        let playTime;
+
+        // Tạo function để nhận thời diểm mà audio chạy đang phát đang ở giây bao nhiêu và trả về để nhận lại id của setInterval khi pause xóa không để interval cập nhật trạng thái nữa
+        const runTime = function () {
+            return setInterval(() => {
+                console.log("interval",audio.currentTime);
+                let progressPercent = audio.currentTime * 100 / audio.duration
+                // gán value cho input
+                progress.value = progressPercent
+            }, 400)
+        }
+
+        
+
+        const Pause = function () {
+            audio.pause()
+            clearInterval(playTime)
+        }
+
+        const Play = function () {
+            audio.play()
+            playTime = runTime()
+        }
+>>>>>>> 06093c389f4c0639403d4c9a961601fc6c6566a9
 
         // Xử lý scroll để phóng to thu nhỏ hình thumb
         document.onscroll = function () {
@@ -130,21 +156,21 @@ const app = {
         // Xử lý khi click nút play
         playBtn.onclick = function () {
             if (_this.isPlaying) {
-                audio.pause()
-
+                Pause()
             } else {
-                audio.play()
+                Play()
+
             }
         }
 
-        // Xử lý nếu thực sự đang play thì add class
+        // Xử lý nếu thực sự đang play thì add class playing để chuyển nút thành nút ấn để pause
         audio.onplay = function () {
             _this.isPlaying = true;
             player.classList.add('playing')
             animateThumb.play()
         }
 
-        // Xử lý nếu thực sự đang pause thì add class
+        // Xử lý nếu thực sự đang pause thì add class playing để chuyển nút thành nút ấn để playing
         audio.onpause = function () {
             player.classList.remove('playing')
             _this.isPlaying = false
@@ -198,6 +224,38 @@ const app = {
             }
         }
 
+        // Xử lý sự kiện khi audio chạy
+        // audio.ontimeupdate = function () {
+        //     console.log(audio.currentTime);
+        //     let progressPercent = audio.currentTime * 100 / audio.duration;
+        //     progress.value = progressPercent
+        // }
+
+        // Xử lý sự kiện khi tua trong input progress
+        progress.onchange = function (e) {
+            // console.log(e.target.value);
+            // console.log(audio.duration);
+            Pause()
+            let timesProgress = e.target.value * audio.duration / 100;
+            audio.currentTime = timesProgress
+            Play()
+        }
+
+        progress.addEventListener("mousedown", () => {
+            // console.log('down');
+            Pause()
+        });
+
+        progress.addEventListener("mouseup", () => {
+            Play()
+        });
+
+        progress.addEventListener('ended', (event) => {
+            clearInterval(playTime)
+        });
+
+
+
     },
 
     loadCurrentSong: function () {
@@ -207,6 +265,7 @@ const app = {
 
     },
 
+<<<<<<< HEAD
     nextSong: function () {
         // console.log(this.songs.length);
         this.currentIndex++;
@@ -225,14 +284,19 @@ const app = {
         this.loadCurrentSong()
     },
 
+=======
+>>>>>>> 06093c389f4c0639403d4c9a961601fc6c6566a9
     start: function () {
+
         // Định nghĩa các thuộc tính cho obj
         this.defineProperties()
+
         // Lắng nghe các sự kiện dom event
         this.handleEvents()
 
         // Tải thông tin bài hát đầu tiên khi chạy ứng dụng
         this.loadCurrentSong()
+
         //render danh sách các bài nhạc vào playlist
         this.render()
     }
