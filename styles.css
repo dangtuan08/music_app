@@ -2,7 +2,6 @@
     --primary-color: #ec1f55;
     --text-color: #333;
   }
-  
   * {
     padding: 0;
     margin: 0;
@@ -90,6 +89,7 @@
     color: #666;
     padding: 18px;
     font-size: 18px;
+    cursor: pointer;
   }
   
   .control .btn.active {
