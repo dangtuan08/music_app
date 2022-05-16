@@ -1,6 +1,15 @@
 // Một số bài hát có thể bị lỗi do liên kết bị hỏng. Vui lòng thay thế liên kết khác để có thể phát
 // Some songs may be faulty due to broken links. Please replace another link so that it can be played
 
+// const axios = require("axios");
+
+// axios({
+//   method: "get",
+//   url: "https://mp3.zing.vn/xhr/chart-realtime?songId=0&videoId=0&albumId=0&chart=song&time=-1",
+// }).then(function (response) {
+//   console.log(response.data);
+// });
+
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
@@ -18,6 +27,7 @@ const nextBtn = $(".btn-next");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
 const playlist = $(".playlist");
+const optionBtn = $(".option")
 
 const app = {
   currentIndex: 0,
@@ -31,40 +41,41 @@ const app = {
     {
       name: "Đi Trong Mùa Hè",
       singer: "Đen x Trần Tiến",
-      path: "https://data.chiasenhac.com/down2/2244/0/2243850-34687502/128/Di%20Trong%20Mua%20He%20-%20Den_%20Tran%20Tien.mp3",
+      path: "https://data.chiasenhac.com/down2/2244/1/2243850-34687502/128/Di%20Trong%20Mua%20He%20-%20Den_%20Tran%20Tien.mp3",
       image: "https://data.chiasenhac.com/data/cover/163/162329.jpg",
     },
     {
       name: "Bài Này Chill Phết",
       singer: "Đen; Min",
-      path: "https://data.chiasenhac.com/down2/2179/0/2178590-1df95ef6/128/Bai%20Nay%20Chill%20Phet%20-%20Den_%20Min.mp3",
+      path: "https://data.chiasenhac.com/down2/2179/1/2178590-1df95ef6/128/Bai%20Nay%20Chill%20Phet%20-%20Den_%20Min.mp3",
       image: "https://data.chiasenhac.com/data/cover/143/142394.jpg",
     },
     {
       name: "Mang Tiền Về Cho Mẹ",
       singer: "Đen; Nguyên Thảo",
-      path: "https://data.chiasenhac.com/down2/2215/0/2214701-52396a51/128/Mang%20Tien%20Ve%20Cho%20Me%20-%20Den_%20Nguyen%20Thao.mp3",
+      path: "https://data.chiasenhac.com/down2/2215/1/2214701-52396a51/128/Mang%20Tien%20Ve%20Cho%20Me%20-%20Den_%20Nguyen%20Thao.mp3",
       image: "https://data.chiasenhac.com/data/cover/153/152045.jpg",
     },
     {
       name: "Lối Nhỏ",
       singer: "Đen; Phương Anh Đào",
-      path: "https://data.chiasenhac.com/down2/2211/0/2210420-cad860c9/128/Loi%20Nho%20-%20Den_%20Phuong%20Anh%20Dao.mp3",
+      path: "https://data.chiasenhac.com/down2/2211/1/2210420-cad860c9/128/Loi%20Nho%20-%20Den_%20Phuong%20Anh%20Dao.mp3",
       image: "https://data.chiasenhac.com/data/cover/152/151033.jpg",
     },
     {
       name: "Đi Về Nhà",
       singer: "Đen; JustaTee",
-      path: "https://data.chiasenhac.com/down2/2179/0/2178291-6e126457/128/Di%20Ve%20Nha%20-%20Den_%20JustaTee.mp3",
+      path: "https://data.chiasenhac.com/down2/2179/1/2178291-6e126457/128/Di%20Ve%20Nha%20-%20Den_%20JustaTee.mp3",
       image: "https://data.chiasenhac.com/data/cover/133/132896.jpg",
     },
     {
       name: "Cảm Ơn",
       singer: "Đen; Biên",
-      path: "https://data.chiasenhac.com/down2/2211/0/2210422-3e31b147/128/Cam%20On%20-%20Den_%20Bien.mp3",
+      path: "https://data.chiasenhac.com/down2/2211/1/2210422-3e31b147/128/Cam%20On%20-%20Den_%20Bien.mp3",
       image: "https://data.chiasenhac.com/data/cover/152/151035.jpg",
     },
   ],
+  
   render: function () {
     const htmls = this.songs.map((song, index) => {
       const html = `
@@ -86,28 +97,6 @@ const app = {
 
     playlist.innerHTML = htmls.join("");
   },
-
-  //   render: function () {
-  //     const htmls = this.songs.map((song, index) => {
-  //       return `
-  //                         <div class="song ${
-  //                           index === this.currentIndex ? "active" : ""
-  //                         }" data-index="${index}">
-  //                             <div class="thumb"
-  //                                 style="background-image: url('${song.image}')">
-  //                             </div>
-  //                             <div class="body">
-  //                                 <h3 class="title">${song.name}</h3>
-  //                                 <p class="author">${song.singer}</p>
-  //                             </div>
-  //                             <div class="option">
-  //                                 <i class="fas fa-ellipsis-h"></i>
-  //                             </div>
-  //                         </div>
-  //                     `;
-  //     });
-  //     playlist.innerHTML = htmls.join("");
-  //   },
 
   defineProperties: function () {
     Object.defineProperty(this, "currentSong", {
@@ -144,6 +133,12 @@ const app = {
       //  console.log(document.documentElement.scrollTop); // không hoạt động với edge
     };
 
+    // Xử lý khi ấn phím M thì mute volumn
+    document.addEventListener("keypress", (e) => {
+      console.log(e);
+      if (e.key === "m") audio.muted = !audio.muted;
+    });
+
     // Xử lý khi click nút play
     playBtn.onclick = function () {
       if (_this.isPlaying) {
@@ -174,6 +169,21 @@ const app = {
       // progress.value = audio.currentTime * 100 / audio.duration
     };
 
+    // Xử lý khi hết bài
+    audio.onended = function () {
+      if (_this.isRepeat) {
+        console.log("repeat");
+        audio.play();
+      } else if (_this.isRandom) {
+        console.log("random end song");
+        _this.playRandomSong();
+        animateThumb.cancel();
+        audio.play();
+      } else {
+        nextBtn.click();
+      }
+    };
+
     progress.oninput = function () {
       let progressTime = (progress.value * audio.duration) / 100;
       audio.currentTime = Math.floor(progressTime);
@@ -193,26 +203,61 @@ const app = {
       _this.nextSong();
       animateThumb.cancel();
       audio.play();
+      _this.scrollIntoActiveSong();
     };
 
     prevBtn.onclick = function () {
       _this.prevSong();
       animateThumb.cancel();
       audio.play();
+      _this.scrollIntoActiveSong();
+    };
+
+    // Xử lý khi click repeatBtn
+    repeatBtn.onclick = function () {
+      if (_this.isRepeat) {
+        _this.isRepeat = false;
+        repeatBtn.classList.remove("active");
+      } else {
+        _this.isRepeat = true;
+        repeatBtn.classList.add("active");
+      }
     };
 
     // Xử lý nút random
     randomBtn.onclick = function () {
-      console.log(_this.isRandom);
+      //   console.log(_this.isRandom);
       if (_this.isRandom) {
         _this.isRandom = false;
         randomBtn.classList.remove("active");
       } else {
-        console.log("1");
+        // console.log("1");
         _this.isRandom = true;
         randomBtn.classList.add("active");
       }
     };
+
+    // Xử lý khi click playlist
+    // playlist.onclick = function (e) {
+    //   let ele= e.target.closest(".song:not(.active)");
+    //   console.log(ele);
+    //   if(ele !== optionBtn){
+    //       console.log('click vào nút option');
+    //   } else{
+    //       console.log();
+    //       _this.currentIndex = ele.dataset.index
+    //       _this.loadCurrentSong(),
+    //       _this.render()
+    //       audio.play()
+    //   }
+    // };
+  },
+
+  scrollIntoActiveSong: function () {
+    $(".song.active").scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+    });
   },
 
   loadCurrentSong: function () {
@@ -227,7 +272,9 @@ const app = {
       randomId = Math.floor(Math.random() * this.songs.length);
     } while (randomId === this.currentIndex);
     this.currentIndex = randomId;
-    // this.loadCurrentSong();
+    this.loadCurrentSong();
+    this.render();
+    this.scrollIntoActiveSong();
   },
 
   nextSong: function () {
@@ -236,18 +283,26 @@ const app = {
       this.playRandomSong();
     } else {
       this.currentIndex++;
-      if (this.currentIndex >= this.songs.length) this.currentIndex = 0;
+      if (this.currentIndex >= this.songs.length) {
+        this.currentIndex = 0;
+      }
+      this.loadCurrentSong();
+      this.render();
     }
-    this.render();
-    this.loadCurrentSong();
   },
 
   prevSong: function () {
+    if (this.isRandom) {
+      this.playRandomSong();
+    } else {
+      this.currentIndex--;
+      if (currentIndex < 0) {
+        this.currentIndex = this.songs.length;
+      }
+      this.loadCurrentSong();
+      this.render();
+    }
     // console.log(this.songs.length);
-    this.currentIndex--;
-    if (this.currentIndex < 0) this.currentIndex = this.songs.length;
-
-    this.loadCurrentSong();
   },
 
   start: function () {
