@@ -27,8 +27,9 @@ const nextBtn = $(".btn-next");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
 const playlist = $(".playlist");
-const optionBtn = $(".option")
 
+const day = new Date()
+const toDay = day.getDay()
 const app = {
   currentIndex: 0,
   isPlaying: false,
@@ -41,47 +42,47 @@ const app = {
     {
       name: "Đi Trong Mùa Hè",
       singer: "Đen x Trần Tiến",
-      path: "https://data.chiasenhac.com/down2/2244/1/2243850-34687502/128/Di%20Trong%20Mua%20He%20-%20Den_%20Tran%20Tien.mp3",
+      path: `https://data.chiasenhac.com/down2/2244/${toDay}/2243850-34687502/128/Di%20Trong%20Mua%20He%20-%20Den_%20Tran%20Tien.mp3`,
       image: "https://data.chiasenhac.com/data/cover/163/162329.jpg",
     },
     {
       name: "Bài Này Chill Phết",
       singer: "Đen; Min",
-      path: "https://data.chiasenhac.com/down2/2179/1/2178590-1df95ef6/128/Bai%20Nay%20Chill%20Phet%20-%20Den_%20Min.mp3",
+      path: `https://data.chiasenhac.com/down2/2179/${toDay}/2178590-1df95ef6/128/Bai%20Nay%20Chill%20Phet%20-%20Den_%20Min.mp3`,
       image: "https://data.chiasenhac.com/data/cover/143/142394.jpg",
     },
     {
       name: "Mang Tiền Về Cho Mẹ",
       singer: "Đen; Nguyên Thảo",
-      path: "https://data.chiasenhac.com/down2/2215/1/2214701-52396a51/128/Mang%20Tien%20Ve%20Cho%20Me%20-%20Den_%20Nguyen%20Thao.mp3",
+      path: `https://data.chiasenhac.com/down2/2215/${toDay}/2214701-52396a51/128/Mang%20Tien%20Ve%20Cho%20Me%20-%20Den_%20Nguyen%20Thao.mp3`,
       image: "https://data.chiasenhac.com/data/cover/153/152045.jpg",
     },
     {
       name: "Lối Nhỏ",
       singer: "Đen; Phương Anh Đào",
-      path: "https://data.chiasenhac.com/down2/2211/1/2210420-cad860c9/128/Loi%20Nho%20-%20Den_%20Phuong%20Anh%20Dao.mp3",
+      path: `https://data.chiasenhac.com/down2/2211/${toDay}/2210420-cad860c9/128/Loi%20Nho%20-%20Den_%20Phuong%20Anh%20Dao.mp3`,
       image: "https://data.chiasenhac.com/data/cover/152/151033.jpg",
     },
     {
       name: "Đi Về Nhà",
       singer: "Đen; JustaTee",
-      path: "https://data.chiasenhac.com/down2/2179/1/2178291-6e126457/128/Di%20Ve%20Nha%20-%20Den_%20JustaTee.mp3",
+      path: `https://data.chiasenhac.com/down2/2179/${toDay}/2178291-6e126457/128/Di%20Ve%20Nha%20-%20Den_%20JustaTee.mp3`,
       image: "https://data.chiasenhac.com/data/cover/133/132896.jpg",
     },
     {
       name: "Cảm Ơn",
       singer: "Đen; Biên",
-      path: "https://data.chiasenhac.com/down2/2211/1/2210422-3e31b147/128/Cam%20On%20-%20Den_%20Bien.mp3",
+      path: `https://data.chiasenhac.com/down2/2211/${toDay}/2210422-3e31b147/128/Cam%20On%20-%20Den_%20Bien.mp3`,
       image: "https://data.chiasenhac.com/data/cover/152/151035.jpg",
     },
   ],
-  
+
   render: function () {
     const htmls = this.songs.map((song, index) => {
       const html = `
             <div class="song ${
               this.currentIndex === index ? "active" : ""
-            }" data-index="${index}">
+            }" data-index="${index}"'>
                 <div class="thumb" style="background-image: url(${song.image})">
                 </div>
                 <div class="body">
@@ -123,15 +124,15 @@ const app = {
     animateThumb.pause();
 
     // Xử lý scroll để phóng to thu nhỏ hình thumb
-    document.onscroll = function () {
-      let scroll = window.scrollY || document.documentElement.scrollTop;
-      let newCdWidth = cdWidth - scroll;
+    // document.onscroll = function () {
+    //   let scroll = window.scrollY || document.documentElement.scrollTop;
+    //   let newCdWidth = cdWidth - scroll;
 
-      cd.style.width = newCdWidth > 0 ? newCdWidth : 0;
-      cd.style.opacity = newCdWidth / cdWidth;
-      //  console.log(window.scrollY);
-      //  console.log(document.documentElement.scrollTop); // không hoạt động với edge
-    };
+    //   cd.style.width = newCdWidth > 0 ? newCdWidth : 0;
+    //   cd.style.opacity = newCdWidth / cdWidth;
+    //   //  console.log(window.scrollY);
+    //   //  console.log(document.documentElement.scrollTop); // không hoạt động với edge
+    // };
 
     // Xử lý khi ấn phím M thì mute volumn
     document.addEventListener("keypress", (e) => {
@@ -237,20 +238,36 @@ const app = {
       }
     };
 
-    // Xử lý khi click playlist
-    // playlist.onclick = function (e) {
-    //   let ele= e.target.closest(".song:not(.active)");
-    //   console.log(ele);
-    //   if(ele !== optionBtn){
-    //       console.log('click vào nút option');
-    //   } else{
-    //       console.log();
-    //       _this.currentIndex = ele.dataset.index
-    //       _this.loadCurrentSong(),
-    //       _this.render()
-    //       audio.play()
-    //   }
-    // };
+    // Xử lý khi click playlist <==============================================================================================================
+    playlist.onclick = function (e) {
+      let ele = e.target.closest(".song:not(.active)");
+      let optionBtn = e.target.closest(".option");
+      // console.log(ele);
+      // let eleActive= e.target.closest(".song.active");
+      // console.log(ele.dataset.index,_this.currentIndex );
+      // console.log(typeof(Number.parseInt(ele.dataset.index)), typeof(_this.currentIndex) );
+      if (optionBtn) {
+        console.log('click option');
+      } else {
+        if (ele) {
+          _this.currentIndex = Number.parseInt(ele.dataset.index);
+          _this.loadCurrentSong(), _this.render();
+          audio.play();
+        } else {
+          return 0;
+        }
+      }
+
+      // if(Number.parseInt(ele.dataset.index) === Number.parseInt(_this.currentIndex) ||optionBtn){
+      //     console.log('click vào nút option');
+      // } else{
+      //     console.log();
+      //     _this.currentIndex = Number.parseInt(ele.dataset.index)
+      //     _this.loadCurrentSong(),
+      //     _this.render()
+      //     audio.play()
+      // }
+    };
   },
 
   scrollIntoActiveSong: function () {
@@ -261,6 +278,7 @@ const app = {
   },
 
   loadCurrentSong: function () {
+    console.log(this.currentIndex);
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url(${this.currentSong.image})`;
     audio.src = this.currentSong.path;
@@ -296,9 +314,11 @@ const app = {
       this.playRandomSong();
     } else {
       this.currentIndex--;
-      if (currentIndex < 0) {
-        this.currentIndex = this.songs.length;
+      if (this.currentIndex < 0) {
+        this.currentIndex = this.songs.length - 1;
+        console.log('lui');
       }
+      console.log('load');
       this.loadCurrentSong();
       this.render();
     }

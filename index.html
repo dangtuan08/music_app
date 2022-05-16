@@ -6,6 +6,13 @@
   integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w=="
   crossorigin="anonymous"
 />
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+  integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+/>
 <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link
   href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
@@ -53,6 +60,19 @@
         </div>
       </div>
 
+      <div class="volumn-control">
+        <i class="fa-solid fa-volume-low"></i>
+        <input
+          id="volumn"
+          class="volumn"
+          type="range"
+          value="0"
+          step="1"
+          min="0"
+          max="100"
+        />
+      </div>
+
       <input
         id="progress"
         class="progress"
@@ -88,6 +108,7 @@
 </body>
 
 <!-- Design from: https://static.collectui.com/shots/3671744/musicloud-revolutionary-app-for-music-streaming-large -->
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>;
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+;
 
 <script src="./index.js"></script>
