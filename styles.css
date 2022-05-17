@@ -91,6 +91,7 @@
     padding: 18px;
     font-size: 18px;
     cursor: pointer;
+    position: relative;
   }
   
   .control .btn.active {
@@ -109,17 +110,18 @@
     background-color: var(--primary-color);
   }
 
-  .volumn-control{
+  .volume-control{
     display: flex;
     align-items: center;
+    margin: 20px 0;
   }
 
-  .volumn-control i{
-    font-size: 24px;
+  .volume-control i{
+    font-size: 18px;
     color: #666;
   }
 
-  .volumn{
+  .volume{
     -webkit-appearance: none;
     height: 6px;
     background: #d3d3d3;
@@ -131,7 +133,7 @@
 
   }
 
-  .volumn::-webkit-slider-thumb {
+  .volume::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 12px;
@@ -165,7 +167,7 @@
   
 
   .playlist {
-    margin-top: 410px;
+    margin-top: 450px;
     padding: 12px;
   }
   

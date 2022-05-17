@@ -60,16 +60,16 @@
         </div>
       </div>
 
-      <div class="volumn-control">
-        <i class="fa-solid fa-volume-low"></i>
+      <div class="volume-control">
+        <span class="volume-icon"><i class="fa-solid fa-volume-high"></i></span>
         <input
-          id="volumn"
-          class="volumn"
+          id="volume"
+          class="volume"
           type="range"
-          value="0"
-          step="1"
+          value="1"
+          step="0.1"
           min="0"
-          max="100"
+          max="1"
         />
       </div>
 
@@ -109,6 +109,6 @@
 
 <!-- Design from: https://static.collectui.com/shots/3671744/musicloud-revolutionary-app-for-music-streaming-large -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-;
-
+<script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
 <script src="./index.js"></script>

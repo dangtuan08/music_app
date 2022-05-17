@@ -27,9 +27,24 @@ const nextBtn = $(".btn-next");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
 const playlist = $(".playlist");
+const volume = $(".volume");
+const volumeIcon = $(".volume-icon");
 
-const day = new Date()
-const toDay = day.getDay()
+
+tippy(repeatBtn, {
+  content: 'Repeat music',
+  theme: ' material',
+  placement: 'bottom',
+});
+
+tippy(randomBtn, {
+  content: 'Random music',
+  theme: ' material',
+  placement: 'bottom',
+});
+
+const day = new Date();
+const toDay = day.getDay();
 const app = {
   currentIndex: 0,
   isPlaying: false,
@@ -124,17 +139,17 @@ const app = {
     animateThumb.pause();
 
     // Xử lý scroll để phóng to thu nhỏ hình thumb
-    // document.onscroll = function () {
-    //   let scroll = window.scrollY || document.documentElement.scrollTop;
-    //   let newCdWidth = cdWidth - scroll;
+    document.onscroll = function () {
+      let scroll = window.scrollY || document.documentElement.scrollTop;
+      let newCdWidth = cdWidth - scroll;
 
-    //   cd.style.width = newCdWidth > 0 ? newCdWidth : 0;
-    //   cd.style.opacity = newCdWidth / cdWidth;
-    //   //  console.log(window.scrollY);
-    //   //  console.log(document.documentElement.scrollTop); // không hoạt động với edge
-    // };
+      cd.style.width = newCdWidth > 0 ? newCdWidth : 0;
+      cd.style.opacity = newCdWidth / cdWidth;
+      //  console.log(window.scrollY);
+      //  console.log(document.documentElement.scrollTop); // không hoạt động với edge
+    };
 
-    // Xử lý khi ấn phím M thì mute volumn
+    // Xử lý khi ấn phím M thì mute volume
     document.addEventListener("keypress", (e) => {
       console.log(e);
       if (e.key === "m") audio.muted = !audio.muted;
@@ -200,6 +215,24 @@ const app = {
       animateThumb.play();
     });
 
+    volume.onchange = function () {
+      console.log(volume.value);
+      audio.volume = volume.value;
+      let html;
+      if (audio.volume >= 0.5) {
+        console.log(`>= 0.8`);
+        html = `<i class="fa-solid fa-volume-high"></i>`;
+        volumeIcon.innerHTML = html;
+      } else if (audio.volume < 0.5 && audio.volume > 0) {
+        html = `<i class="fa-solid fa-volume-low"></i>`;
+        volumeIcon.innerHTML = html;
+      } else if (audio.volume === 0) {
+        console.log("=0");
+        html = `<i class="fa-solid fa-volume-xmark"></i>`;
+        volumeIcon.innerHTML = html;
+      }
+    };
+
     nextBtn.onclick = function () {
       _this.nextSong();
       animateThumb.cancel();
@@ -247,7 +280,7 @@ const app = {
       // console.log(ele.dataset.index,_this.currentIndex );
       // console.log(typeof(Number.parseInt(ele.dataset.index)), typeof(_this.currentIndex) );
       if (optionBtn) {
-        console.log('click option');
+        console.log("click option");
       } else {
         if (ele) {
           _this.currentIndex = Number.parseInt(ele.dataset.index);
@@ -316,9 +349,9 @@ const app = {
       this.currentIndex--;
       if (this.currentIndex < 0) {
         this.currentIndex = this.songs.length - 1;
-        console.log('lui');
+        console.log("lui");
       }
-      console.log('load');
+      console.log("load");
       this.loadCurrentSong();
       this.render();
     }
