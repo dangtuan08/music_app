@@ -30,17 +30,16 @@ const playlist = $(".playlist");
 const volume = $(".volume");
 const volumeIcon = $(".volume-icon");
 
-
 tippy(repeatBtn, {
-  content: 'Repeat music',
-  theme: ' material',
-  placement: 'bottom',
+  content: "Repeat music",
+  theme: " material",
+  placement: "bottom",
 });
 
 tippy(randomBtn, {
-  content: 'Random music',
-  theme: ' material',
-  placement: 'bottom',
+  content: "Random music",
+  theme: " material",
+  placement: "bottom",
 });
 
 const day = new Date();
@@ -182,7 +181,12 @@ const app = {
     audio.ontimeupdate = function () {
       // console.log();
       progress.value = Math.floor((audio.currentTime * 100) / audio.duration);
-      // progress.value = audio.currentTime * 100 / audio.duration
+
+      // gán lại biến --width-progress-input = % của volume để after co dãn lấy nền
+      progress.style.setProperty(
+        "--width-progress-input",
+        `${Math.floor((audio.currentTime * 100) / audio.duration)}%`
+      );
     };
 
     // Xử lý khi hết bài
@@ -215,19 +219,26 @@ const app = {
       animateThumb.play();
     });
 
-    volume.onchange = function () {
-      console.log(volume.value);
+    volume.oninput = function () {
+      // console.log(Math.floor(volume.value * 100) + "%");
+      localStorage.setItem("volume", volume.value);
       audio.volume = volume.value;
+
+      // gán lại biến --width-volume-input = % của volume để after co dãn lấy nền
+      volume.style.setProperty(
+        "--width-volume-input",
+        `${Math.floor(volume.value * 100)}%`
+      );
+
+      // Thay icon khi kéo thanh volume
       let html;
       if (audio.volume >= 0.5) {
-        console.log(`>= 0.8`);
         html = `<i class="fa-solid fa-volume-high"></i>`;
         volumeIcon.innerHTML = html;
       } else if (audio.volume < 0.5 && audio.volume > 0) {
         html = `<i class="fa-solid fa-volume-low"></i>`;
         volumeIcon.innerHTML = html;
       } else if (audio.volume === 0) {
-        console.log("=0");
         html = `<i class="fa-solid fa-volume-xmark"></i>`;
         volumeIcon.innerHTML = html;
       }
@@ -283,6 +294,7 @@ const app = {
         console.log("click option");
       } else {
         if (ele) {
+          animateThumb.cancel();
           _this.currentIndex = Number.parseInt(ele.dataset.index);
           _this.loadCurrentSong(), _this.render();
           audio.play();
@@ -311,7 +323,7 @@ const app = {
   },
 
   loadCurrentSong: function () {
-    console.log(this.currentIndex);
+    // console.log(this.currentIndex);
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url(${this.currentSong.image})`;
     audio.src = this.currentSong.path;
@@ -359,6 +371,14 @@ const app = {
   },
 
   start: function () {
+    let valueVolume = JSON.parse(localStorage.getItem("volume"));
+    // console.log(Number.parseFloat(valueVolume));
+    volume.value = valueVolume;
+    volume.style.setProperty(
+      "--width-volume-input",
+      `${Number.parseFloat(valueVolume) * 100}%`
+    );
+
     // Định nghĩa các thuộc tính cho obj
     this.defineProperties();
 
