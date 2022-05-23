@@ -11,7 +11,8 @@
 }
 
 body {
-  background: linear-gradient(rgb(184, 124, 140), rgb(204, 81, 114));
+  background: linear-gradient(90deg, rgba(250,218,230,1) 0%, rgba(218,132,236,1) 100%);
+  
 }
 
 html {
@@ -237,7 +238,7 @@ header h2 {
 /* PLAYLIST */
 
 .playlist {
-  margin-top: 465px;
+  margin-top: 462px;
   padding: 12px;
   background-color: #fff;
 }
