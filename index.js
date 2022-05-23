@@ -29,6 +29,9 @@ const repeatBtn = $(".btn-repeat");
 const playlist = $(".playlist");
 const volume = $(".volume");
 const volumeIcon = $(".volume-icon");
+const lbCurrenTime = $(".text-currenTime");
+const lbDurationTime = $(".text-durationTime");
+
 
 tippy(repeatBtn, {
   content: "Repeat music",
@@ -162,6 +165,16 @@ const app = {
         audio.play();
       }
     };
+    audio.addEventListener("loadeddata", ()=>{
+      // update song total duration
+      let mainAdDuration = audio.duration;
+      let totalMin = Math.floor(mainAdDuration / 60);
+      let totalSec = Math.floor(mainAdDuration % 60);
+      if(totalSec < 10){ //if sec is less than 10 then add 0 before it
+        totalSec = `0${totalSec}`;
+      }
+      lbDurationTime.innerText = `${totalMin}:${totalSec}`;
+    });
 
     // Xử lý nếu thực sự đang play thì add class playing để chuyển nút thành nút ấn để pause
     audio.onplay = function () {
@@ -180,13 +193,24 @@ const app = {
     // Xử lý sự kiện cho input propress
     audio.ontimeupdate = function () {
       // console.log();
-      progress.value = Math.floor((audio.currentTime * 100) / audio.duration);
 
+      progress.value = Math.floor((audio.currentTime * 100) / audio.duration);
       // gán lại biến --width-progress-input = % của volume để after co dãn lấy nền
       progress.style.setProperty(
         "--width-progress-input",
         `${Math.floor((audio.currentTime * 100) / audio.duration)}%`
       );
+
+      // Update time run
+      let audioCurrentTime = audio.currentTime;
+      let totalMin = Math.floor(audioCurrentTime / 60);
+      let totalSec = Math.floor(audioCurrentTime % 60);
+      if(totalSec < 10){ //if sec is less than 10 then add 0 before it
+        totalSec = `0${totalSec}`;
+      }
+      lbCurrenTime.innerText = `${totalMin}:${totalSec}`;
+
+
     };
 
     // Xử lý khi hết bài
@@ -327,6 +351,7 @@ const app = {
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url(${this.currentSong.image})`;
     audio.src = this.currentSong.path;
+
   },
 
   playRandomSong: function () {
@@ -378,6 +403,10 @@ const app = {
       "--width-volume-input",
       `${Number.parseFloat(valueVolume) * 100}%`
     );
+
+    // lbDurationTime.innerText = audio.duration
+
+
 
     // Định nghĩa các thuộc tính cho obj
     this.defineProperties();
