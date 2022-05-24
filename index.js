@@ -32,7 +32,6 @@ const volumeIcon = $(".volume-icon");
 const lbCurrenTime = $(".text-currenTime");
 const lbDurationTime = $(".text-durationTime");
 
-
 tippy(repeatBtn, {
   content: "Repeat music",
   theme: " material",
@@ -116,6 +115,28 @@ const app = {
     playlist.innerHTML = htmls.join("");
   },
 
+  renderIconVolume: function () {
+    let html;
+    if (audio.volume >= 0.5) {
+      html = `<i class="fa-solid fa-volume-high"></i>`;
+      volumeIcon.innerHTML = html;
+    } else if (audio.volume < 0.5 && audio.volume > 0) {
+      html = `<i class="fa-solid fa-volume-low"></i>`;
+      volumeIcon.innerHTML = html;
+    } else if (audio.volume === 0) {
+      html = `<i class="fa-solid fa-volume-xmark"></i>`;
+      volumeIcon.innerHTML = html;
+    }
+  },
+
+  renderRangeVolume: function () {
+    volume.value = audio.volume;
+    volume.style.setProperty(
+      "--width-volume-input",
+      `${Number.parseFloat(audio.volume) * 100}%`
+    );
+  },
+
   defineProperties: function () {
     Object.defineProperty(this, "currentSong", {
       get: function () {
@@ -165,12 +186,13 @@ const app = {
         audio.play();
       }
     };
-    audio.addEventListener("loadeddata", ()=>{
+    audio.addEventListener("loadeddata", () => {
       // update song total duration
       let mainAdDuration = audio.duration;
       let totalMin = Math.floor(mainAdDuration / 60);
       let totalSec = Math.floor(mainAdDuration % 60);
-      if(totalSec < 10){ //if sec is less than 10 then add 0 before it
+      if (totalSec < 10) {
+        //if sec is less than 10 then add 0 before it
         totalSec = `0${totalSec}`;
       }
       lbDurationTime.innerText = `${totalMin}:${totalSec}`;
@@ -192,8 +214,6 @@ const app = {
 
     // Xử lý sự kiện cho input propress
     audio.ontimeupdate = function () {
-      // console.log();
-
       progress.value = Math.floor((audio.currentTime * 100) / audio.duration);
       // gán lại biến --width-progress-input = % của volume để after co dãn lấy nền
       progress.style.setProperty(
@@ -205,12 +225,11 @@ const app = {
       let audioCurrentTime = audio.currentTime;
       let totalMin = Math.floor(audioCurrentTime / 60);
       let totalSec = Math.floor(audioCurrentTime % 60);
-      if(totalSec < 10){ //if sec is less than 10 then add 0 before it
+      if (totalSec < 10) {
+        //if sec is less than 10 then add 0 before it
         totalSec = `0${totalSec}`;
       }
       lbCurrenTime.innerText = `${totalMin}:${totalSec}`;
-
-
     };
 
     // Xử lý khi hết bài
@@ -243,29 +262,36 @@ const app = {
       animateThumb.play();
     });
 
+    // Sự kiện click nút volume /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    volumeIcon.onclick = function () {
+      if (audio.volume == 0) {
+        // console.log('click');
+        _this.loadVolume();
+        if (audio.volume == 0) {
+          audio.volume = 1;
+          _this.setVolume();
+        }
+        _this.renderRangeVolume();
+        _this.renderIconVolume();
+      } else {
+        audio.volume = 0;
+        // _this.setVolume();
+        _this.renderIconVolume();
+        _this.renderRangeVolume();
+      }
+    };
     volume.oninput = function () {
-      // console.log(Math.floor(volume.value * 100) + "%");
-      localStorage.setItem("volume", volume.value);
       audio.volume = volume.value;
+      _this.setVolume();
 
       // gán lại biến --width-volume-input = % của volume để after co dãn lấy nền
-      volume.style.setProperty(
-        "--width-volume-input",
-        `${Math.floor(volume.value * 100)}%`
-      );
-
+      // volume.style.setProperty(
+      //   "--width-volume-input",
+      //   `${Math.floor(volume.value * 100)}%`
+      // );
+      _this.renderRangeVolume();
       // Thay icon khi kéo thanh volume
-      let html;
-      if (audio.volume >= 0.5) {
-        html = `<i class="fa-solid fa-volume-high"></i>`;
-        volumeIcon.innerHTML = html;
-      } else if (audio.volume < 0.5 && audio.volume > 0) {
-        html = `<i class="fa-solid fa-volume-low"></i>`;
-        volumeIcon.innerHTML = html;
-      } else if (audio.volume === 0) {
-        html = `<i class="fa-solid fa-volume-xmark"></i>`;
-        volumeIcon.innerHTML = html;
-      }
+      _this.renderIconVolume();
     };
 
     nextBtn.onclick = function () {
@@ -326,16 +352,6 @@ const app = {
           return 0;
         }
       }
-
-      // if(Number.parseInt(ele.dataset.index) === Number.parseInt(_this.currentIndex) ||optionBtn){
-      //     console.log('click vào nút option');
-      // } else{
-      //     console.log();
-      //     _this.currentIndex = Number.parseInt(ele.dataset.index)
-      //     _this.loadCurrentSong(),
-      //     _this.render()
-      //     audio.play()
-      // }
     };
   },
 
@@ -351,7 +367,27 @@ const app = {
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url(${this.currentSong.image})`;
     audio.src = this.currentSong.path;
+  },
 
+  setVolume: function () {
+    // if (audio.volume > 0.9) {
+    //   localStorage.setItem("volume", 1);
+    // } else if (audio.volume < 0.05) {
+    //   localStorage.setItem("volume", 0);
+    // } else {
+    //   localStorage.setItem("volume", audio.volume);
+    // }
+    localStorage.setItem("volume", audio.volume);
+  },
+
+  loadVolume: function () {
+    let valueVolume = JSON.parse(localStorage.getItem("volume"));
+    volume.value = valueVolume;
+    volume.style.setProperty(
+      "--width-volume-input",
+      `${Number.parseFloat(valueVolume) * 100}%`
+    );
+    audio.volume = valueVolume;
   },
 
   playRandomSong: function () {
@@ -396,17 +432,10 @@ const app = {
   },
 
   start: function () {
-    let valueVolume = JSON.parse(localStorage.getItem("volume"));
-    // console.log(Number.parseFloat(valueVolume));
-    volume.value = valueVolume;
-    volume.style.setProperty(
-      "--width-volume-input",
-      `${Number.parseFloat(valueVolume) * 100}%`
-    );
+    this.loadVolume();
+    this.renderIconVolume();
 
     // lbDurationTime.innerText = audio.duration
-
-
 
     // Định nghĩa các thuộc tính cho obj
     this.defineProperties();
