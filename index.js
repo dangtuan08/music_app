@@ -186,8 +186,8 @@ const app = {
         audio.play();
       }
     };
-    audio.addEventListener("loadeddata", () => {
-      // update song total duration
+
+    audio.onloadeddata = ()=>{
       let mainAdDuration = audio.duration;
       let totalMin = Math.floor(mainAdDuration / 60);
       let totalSec = Math.floor(mainAdDuration % 60);
@@ -196,7 +196,19 @@ const app = {
         totalSec = `0${totalSec}`;
       }
       lbDurationTime.innerText = `${totalMin}:${totalSec}`;
-    });
+    }
+
+    // audio.addEventListener("loadeddata", () => {
+    //   // update song total duration
+    //   let mainAdDuration = audio.duration;
+    //   let totalMin = Math.floor(mainAdDuration / 60);
+    //   let totalSec = Math.floor(mainAdDuration % 60);
+    //   if (totalSec < 10) {
+    //     //if sec is less than 10 then add 0 before it
+    //     totalSec = `0${totalSec}`;
+    //   }
+    //   lbDurationTime.innerText = `${totalMin}:${totalSec}`;
+    // });
 
     // Xử lý nếu thực sự đang play thì add class playing để chuyển nút thành nút ấn để pause
     audio.onplay = function () {
